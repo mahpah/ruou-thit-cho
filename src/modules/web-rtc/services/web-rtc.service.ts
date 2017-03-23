@@ -4,7 +4,8 @@ import { SignalingService } from './signaling.service'
 
 @Injectable()
 export class WebRTCService {
-	stream: MediaStream
+	remoteStream: MediaStream
+	localStream: MediaStream
 	streamRemoved = new EventEmitter()
 	streamAdded = new EventEmitter()
 	request = new EventEmitter()
@@ -49,13 +50,12 @@ export class WebRTCService {
 		}
 
 		this.connection.onaddstream = (event) => {
-			console.log(event.stream)
-			this.stream = event.stream
-			this.streamAdded.emit(this.stream)
+			this.remoteStream = event.stream
+			this.streamAdded.emit(this.remoteStream)
 		}
 
 		this.connection.onremovestream = _event => {
-			this.stream = undefined
+			this.remoteStream = undefined
 			this.streamRemoved.emit()
 		}
 	}
@@ -81,16 +81,19 @@ export class WebRTCService {
 	}
 
 	addMediaStream(stream: MediaStream) {
+		this.localStream = stream
 		this.connection.addStream(stream)
 	}
 
-	getUserMedia() {
-		return window.navigator.mediaDevices.getUserMedia({
-			video: true,
-			audio: false,
-		}).then(stream => {
-			this.addMediaStream(stream)
-			return stream
-		})
+	getUserMedia(constraints) {
+		return window.navigator.mediaDevices.getUserMedia(constraints)
+	}
+
+	closeConnection() {
+		if (this.localStream) {
+			this.connection.removeStream(this.localStream)
+			this.localStream.getTracks().forEach(t => t.stop())
+		}
+		this.connection.close()
 	}
 }

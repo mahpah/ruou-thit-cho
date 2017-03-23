@@ -4,5 +4,8 @@ div
 	video(#screen, autoplay)
 div
 	video(#mirror, autoplay, width="100")
-div
-	button((click)="call()") Click to call
+div(*ngIf="!started")
+	button(*ngIf="!isRequesting && !requestPending", (click)="call()") Click to call
+	button(*ngIf="requestPending", (click)="onAccept()") Accept pending request
+div(*ngIf="started")
+	button((click)="hang()") Disconnect

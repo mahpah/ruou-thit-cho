@@ -1,0 +1,61 @@
+{
+  "name": "@digimed/angular-webrtc",
+  "version": "0.0.3",
+  "description": "Angular 2 modal component",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "dev": "webpack-dev-server --config webpack-dev.config.js --env.dev",
+    "clean": "rimraf ./dist",
+    "build": "webpack --env.build",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "webrtc",
+    "angular"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@angular/compiler": "^2.1.2",
+    "@angular/platform-browser": "^2.1.2",
+    "@angular/platform-browser-dynamic": "^2.1.2",
+    "@types/node": "^6.0.46",
+    "@types/socket.io-client": "^1.4.29",
+    "@types/webrtc": "0.0.21",
+    "angular2-template-loader": "^0.6.0",
+    "awesome-typescript-loader": "^3.0.0-beta.9",
+    "core-js": "^2.4.1",
+    "css-loader": "^0.25.0",
+    "css-to-string-loader": "^0.1.2",
+    "extract-text-webpack-plugin": "^2.0.0-beta.4",
+    "file-loader": "^0.9.0",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin": "^2.24.1",
+    "imports-loader": "^0.6.5",
+    "node-sass": "^3.11.2",
+    "pug": "^2.0.0-beta6",
+    "pug-html-loader": "1.0.7",
+    "resolve-url-loader": "^1.6.0",
+    "rimraf": "^2.5.4",
+    "sass-loader": "^4.0.2",
+    "ts-helpers": "^1.1.2",
+    "ts-loader": "^1.2.2",
+    "typescript": "^2.0.7",
+    "webpack": "beta",
+    "webpack-dev-server": "beta",
+    "webpack-merge": "^0.15.0"
+  },
+  "dependencies": {
+    "@angular/common": "^2.1.2",
+    "@angular/core": "^2.1.2",
+    "rxjs": "^5.0.0-beta.12",
+    "socket.io-client": "^1.7.3",
+    "webrtc-adapter": "^3.2.0",
+    "zone.js": "^0.6.26"
+  }
+}

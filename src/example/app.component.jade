@@ -1,0 +1,8 @@
+textarea(#textarea)
+button((click)="send(textarea.value)") Send
+div
+	video(#screen, autoplay)
+div
+	video(#mirror, autoplay, width="100")
+div
+	button((click)="call()") Click to call

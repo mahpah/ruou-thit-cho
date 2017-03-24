@@ -9,11 +9,13 @@ export class SocketIOSignalingService extends SignalingService {
 	candidate = new EventEmitter()
 
 	constructor(
-		private socket: SocketIOConnection
+		private socket: SocketIOConnection,
 	) {
 		super()
 		this.onInit()
 	}
+
+	init() {}
 
 	onInit() {
 		this.socket.events('message').subscribe(data => {

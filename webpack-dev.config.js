@@ -58,7 +58,7 @@ module.exports = (env = {}) => {
 			devtool: 'source-map',
 		},
 		devServer(DEV_PORT),
-		typescript(),
+		typescript('tsconfig.json'),
 		pug(root('example')),
 		sass(),
 		file(env),

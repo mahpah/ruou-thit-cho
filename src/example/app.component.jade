@@ -1,11 +1,4 @@
-textarea(#textarea)
-button((click)="send(textarea.value)") Send
 div
-	video(#screen, autoplay)
-div
-	video(#mirror, autoplay, width="100")
-div(*ngIf="!started")
-	button(*ngIf="!isRequesting && !requestPending", (click)="call()") Click to call
-	button(*ngIf="requestPending", (click)="onAccept()") Accept pending request
-div(*ngIf="started")
-	button((click)="hang()") Disconnect
+	a.btn.btn-default(routerLink="socket") Socket
+	a.btn.btn-default(routerLink="signalr") Signalr
+router-outlet

@@ -28,7 +28,7 @@ externals['rxjs/ReplaySubject'] = 'rxjs/ReplaySubject'
 const loaders = [{
 	test: /\.ts$/,
 	loaders: [
-		'ts-loader',
+		'awesome-typescript-loader?configFileName=tsconfig.build.json',
 		'angular2-template-loader',
 	],
 	exclude: /node_modules/,

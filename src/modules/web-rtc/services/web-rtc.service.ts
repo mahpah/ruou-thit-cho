@@ -9,80 +9,80 @@ export class WebRTCService {
 	streamRemoved = new EventEmitter()
 	streamAdded = new EventEmitter()
 	request = new EventEmitter()
-	private connection: RTCPeerConnection
+	candidate = []
+	private peerConnection: RTCPeerConnection
 	private serverConfig: RTCConfiguration
 
 	constructor(
-		@Inject(SignalingService) private signaling: SignalingService
+		@Inject(SignalingService) private signaling: SignalingService,
 	) {
-		this.init()
+		// this.init()
 	}
 
 	init() {
-		this.createConnection()
-		this.signaling.candidate.subscribe(candidate => {
-			this.connection.addIceCandidate(new RTCIceCandidate(candidate))
+		this.signaling.candidate.subscribe((candidate) => {
+			this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
 		})
 
 		this.signaling.offer.subscribe(description => {
-			this.connection.setRemoteDescription(description)
+			this.peerConnection.setRemoteDescription(description)
 			this.request.emit()
 		})
 
 		this.signaling.answer.subscribe(description => {
-			this.connection.setRemoteDescription(description)
+			this.peerConnection.setRemoteDescription(description)
 		})
-
 	}
 
-	createConnection(config?: RTCConfiguration) {
+	createConnection(config?: RTCConfiguration, ...extra) {
 		config = config || this.serverConfig
-		this.connection = new RTCPeerConnection(config)
+		this.peerConnection = new RTCPeerConnection(config)
 
-		this.connection.onicecandidate = event => {
+		this.peerConnection.onicecandidate = event => {
 			if (event.candidate) {
-				this.signaling.sendCandidate({
+				let candidate = {
 					candidate: event.candidate.candidate,
 					sdpMLineIndex: event.candidate.sdpMLineIndex,
 					sdpMid: event.candidate.sdpMid,
-				} as RTCIceCandidate)
+				} as RTCIceCandidate
+				this.signaling.sendCandidate(candidate, ...extra)
 			}
 		}
 
-		this.connection.onaddstream = (event) => {
+		this.peerConnection.onaddstream = (event) => {
 			this.remoteStream = event.stream
 			this.streamAdded.emit(this.remoteStream)
 		}
 
-		this.connection.onremovestream = _event => {
+		this.peerConnection.onremovestream = _event => {
 			this.remoteStream = undefined
 			this.streamRemoved.emit()
 		}
 	}
 
-	createOffer(constraints) {
-		if (!this.connection) {
+	createOffer(constraints, ...params) {
+		if (!this.peerConnection) {
 			throw 'No connection'
 		}
 
-		this.connection.createOffer(constraints)
+		this.peerConnection.createOffer(constraints)
 			.then(description => {
-				this.connection.setLocalDescription(description)
-				this.signaling.sendOffer(description)
+				this.peerConnection.setLocalDescription(description)
+				this.signaling.sendOffer(description, ...params)
 			})
 	}
 
-	createAnswer() {
-		this.connection.createAnswer()
+	createAnswer(constraints?, ...extra) {
+		this.peerConnection.createAnswer(constraints)
 			.then(description => {
-				this.connection.setLocalDescription(description)
-				this.signaling.sendAnswer(description)
+				this.peerConnection.setLocalDescription(description)
+				this.signaling.sendAnswer(description, ...extra)
 			})
 	}
 
 	addMediaStream(stream: MediaStream) {
 		this.localStream = stream
-		this.connection.addStream(stream)
+		this.peerConnection.addStream(stream)
 	}
 
 	getUserMedia(constraints) {
@@ -91,9 +91,9 @@ export class WebRTCService {
 
 	closeConnection() {
 		if (this.localStream) {
-			this.connection.removeStream(this.localStream)
+			this.peerConnection.removeStream(this.localStream)
 			this.localStream.getTracks().forEach(t => t.stop())
 		}
-		this.connection.close()
+		this.peerConnection.close()
 	}
 }

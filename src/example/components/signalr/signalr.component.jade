@@ -1,0 +1,14 @@
+div(*ngIf="userData")
+	| {{ userData.name }} - {{ userData.id }}
+div
+	form([formGroup]="form", (ngSubmit)="submit()")
+		input(type="email", formControlName="email")
+		input(type="text", formControlName="password")
+		button Login
+div
+	input(type="text", #uid)
+	button((click)="call(uid.value)") Call
+div
+	video(#screen, autoplay)
+div
+	video(#mirror, autoplay, width="100")

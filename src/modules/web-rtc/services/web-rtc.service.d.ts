@@ -3,7 +3,8 @@ import 'webrtc-adapter';
 import { SignalingService } from './signaling.service';
 export declare class WebRTCService {
     private signaling;
-    stream: MediaStream;
+    remoteStream: MediaStream;
+    localStream: MediaStream;
     streamRemoved: EventEmitter<{}>;
     streamAdded: EventEmitter<{}>;
     request: EventEmitter<{}>;
@@ -15,5 +16,6 @@ export declare class WebRTCService {
     createOffer(constraints: any): void;
     createAnswer(): void;
     addMediaStream(stream: MediaStream): void;
-    getUserMedia(): Promise<MediaStream>;
+    getUserMedia(constraints: any): Promise<MediaStream>;
+    closeConnection(): void;
 }

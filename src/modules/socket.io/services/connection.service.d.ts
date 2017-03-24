@@ -8,6 +8,6 @@ export declare class SocketIOConnection {
     connect(): void;
     join(room?: any): void;
     emit(event: any, data?: any): void;
-    subscribe(event: any): EventEmitter<any>;
+    subscribe(event: any): EventEmitter<{}>;
     events(name: any): EventEmitter<any>;
 }

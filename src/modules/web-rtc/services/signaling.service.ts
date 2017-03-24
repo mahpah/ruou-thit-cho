@@ -1,13 +1,13 @@
 import { Injectable, EventEmitter } from '@angular/core'
 
 @Injectable()
-export abstract class SignalingService {
+export abstract class SignalingConnection {
 	candidate: EventEmitter<RTCIceCandidate>
 	offer: EventEmitter<RTCSessionDescription>
 	answer: EventEmitter<RTCSessionDescription>
 
-	abstract sendOffer(p: any, ...extra): void
-	abstract sendAnswer(p: any, ...extra): void
-	abstract sendCandidate(candidate: RTCIceCandidate, ...extra): void
-	abstract init(): void
+	abstract sendOffer(constraints?): void
+	abstract sendAnswer(contraints): void
+	abstract sendCandidate(candidate: RTCIceCandidate): void
+	abstract init(params: any): void
 }

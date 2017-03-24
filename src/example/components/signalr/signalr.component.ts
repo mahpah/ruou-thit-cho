@@ -1,18 +1,14 @@
 import { Component, ViewChild, ElementRef, Renderer } from '@angular/core'
 import { SignalrConnection } from 'modules/signalr'
-import { WebRTCService, SignalingService } from 'modules/web-rtc'
-import { SignalrSignaling } from '../../services'
+import { WebRTCService } from 'modules/web-rtc'
+import { SignalrSignalingConnectionFactory } from '../../services'
 import { FormBuilder, FormGroup } from '@angular/forms'
 declare const jQuery: any
 
 @Component({
 	selector: 'signalr',
 	providers: [
-		SignalrSignaling,
-		{
-			provide: SignalingService,
-			useExisting: SignalrSignaling,
-		},
+		SignalrSignalingConnectionFactory,
 		WebRTCService,
 	],
 	styleUrls: ['./signalr.component.scss'],
@@ -29,7 +25,7 @@ export class SignalrComponent {
 
 	constructor(
 		private signalrConnection: SignalrConnection,
-		private signalrSignaling: SignalrSignaling,
+		private signalrSignalingFactory: SignalrSignalingConnectionFactory,
 		private webRtc: WebRTCService,
 		private renderer: Renderer,
 		private formBuilder: FormBuilder,
@@ -63,29 +59,30 @@ export class SignalrComponent {
 			.call('subscribe')
 		})
 		.then(() => {
-			this.signalrSignaling.init()
-			this.webRtc.init()
 			this.listen()
 		})
 	}
 
 	call([userId]) {
-		this.webRtc.createConnection(null, [userId])
+		let signaling = this.signalrSignalingFactory.create([userId])
+		this.webRtc.init(signaling)
+		this.webRtc.createConnection(null)
 		this.signalrConnection.call('callUser', [userId])
 	}
 
 	onIncomingCall(data) {
-		console.log(data)
 		if (true) {
-			this.webRtc.createConnection(null, data.map(d => d.UserId))
+			let ids = data.map(d => d.UserId)
+			let signaling = this.signalrSignalingFactory.create(ids)
+			this.webRtc.init(signaling)
+			this.webRtc.createConnection()
+			this.webRtc.request.subscribe(_ => {
+				this.webRtc.createAnswer({})
+			})
 			data.forEach(({UserId}) => {
 				this.signalrConnection.call('answerCall', [true, UserId])
 			})
 		}
-
-		this.webRtc.request.subscribe(_ => {
-			this.webRtc.createAnswer({}, data)
-		})
 	}
 
 	onCallAccepted(data) {
@@ -102,7 +99,7 @@ export class SignalrComponent {
 			this.webRtc.createOffer({
 				offerToReceiveVideo: 1,
 				offerToReceiveAudio: 0,
-			}, data)
+			})
 		})
 	}
 
@@ -134,6 +131,4 @@ export class SignalrComponent {
 				})
 		})
 	}
-
-
 }

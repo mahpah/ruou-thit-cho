@@ -1,9 +1,9 @@
 import { Injectable, EventEmitter } from '@angular/core'
 import { SocketIOConnection } from 'modules/socket.io'
-import { SignalingService } from 'modules/web-rtc'
+import { SignalingConnection } from 'modules/web-rtc'
 
 @Injectable()
-export class SocketIOSignalingService extends SignalingService {
+export class SocketIOSignalingService extends SignalingConnection {
 	offer = new EventEmitter()
 	answer = new EventEmitter()
 	candidate = new EventEmitter()

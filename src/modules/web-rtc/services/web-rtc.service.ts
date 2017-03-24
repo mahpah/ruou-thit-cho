@@ -1,6 +1,6 @@
-import { Injectable, Inject, EventEmitter } from '@angular/core'
+import { Injectable, EventEmitter } from '@angular/core'
 import 'webrtc-adapter'
-import { SignalingService } from './signaling.service'
+import { SignalingConnection } from './signaling.service'
 
 @Injectable()
 export class WebRTCService {
@@ -12,14 +12,12 @@ export class WebRTCService {
 	candidate = []
 	private peerConnection: RTCPeerConnection
 	private serverConfig: RTCConfiguration
+	private signaling: SignalingConnection
 
-	constructor(
-		@Inject(SignalingService) private signaling: SignalingService,
-	) {
-		// this.init()
-	}
+	constructor() {}
 
-	init() {
+	init(signaling) {
+		this.signaling = signaling
 		this.signaling.candidate.subscribe((candidate) => {
 			this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
 		})
@@ -34,7 +32,7 @@ export class WebRTCService {
 		})
 	}
 
-	createConnection(config?: RTCConfiguration, ...extra) {
+	createConnection(config?: RTCConfiguration) {
 		config = config || this.serverConfig
 		this.peerConnection = new RTCPeerConnection(config)
 
@@ -45,7 +43,7 @@ export class WebRTCService {
 					sdpMLineIndex: event.candidate.sdpMLineIndex,
 					sdpMid: event.candidate.sdpMid,
 				} as RTCIceCandidate
-				this.signaling.sendCandidate(candidate, ...extra)
+				this.signaling.sendCandidate(candidate)
 			}
 		}
 
@@ -60,7 +58,7 @@ export class WebRTCService {
 		}
 	}
 
-	createOffer(constraints, ...params) {
+	createOffer(constraints) {
 		if (!this.peerConnection) {
 			throw 'No connection'
 		}
@@ -68,15 +66,15 @@ export class WebRTCService {
 		this.peerConnection.createOffer(constraints)
 			.then(description => {
 				this.peerConnection.setLocalDescription(description)
-				this.signaling.sendOffer(description, ...params)
+				this.signaling.sendOffer(description)
 			})
 	}
 
-	createAnswer(constraints?, ...extra) {
+	createAnswer(constraints) {
 		this.peerConnection.createAnswer(constraints)
 			.then(description => {
 				this.peerConnection.setLocalDescription(description)
-				this.signaling.sendAnswer(description, ...extra)
+				this.signaling.sendAnswer(description)
 			})
 	}
 

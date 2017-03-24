@@ -1,16 +1,30 @@
 import { Injectable, EventEmitter } from '@angular/core'
-import { SignalingService } from 'modules/web-rtc'
 import { SignalrConnection } from 'modules/signalr'
+import { SignalingConnection } from 'modules/web-rtc'
 
 @Injectable()
-export class SignalrSignaling implements SignalingService {
+export class SignalrSignalingConnectionFactory {
+	constructor(
+		private connection: SignalrConnection,
+	) {}
+
+	create(receivers) {
+		return new SignalrSignalingConnection(this.connection, receivers)
+	}
+}
+
+
+export class SignalrSignalingConnection implements SignalingConnection {
 	candidate = new EventEmitter()
 	offer = new EventEmitter()
 	answer = new EventEmitter()
 
 	constructor(
 		private connection: SignalrConnection,
-	) {}
+		private recivers: Array<string>
+	) {
+		this.init()
+	}
 
 	init() {
 		this.connection.events('onSignalReceived').subscribe(([_user, data]) => {
@@ -37,20 +51,20 @@ export class SignalrSignaling implements SignalingService {
 		})
 	}
 
-	sendOffer(description, ids) {
-		ids.forEach(id => {
+	sendOffer(description) {
+		this.recivers.forEach(id => {
 			this.sendSignal(description, id)
 		})
 	}
 
-	sendAnswer(description, ids) {
-		ids.forEach(id => {
+	sendAnswer(description) {
+		this.recivers.forEach(id => {
 			this.sendSignal(description, id)
 		})
 	}
 
-	sendCandidate(candidate, ids) {
-		ids.forEach(id => {
+	sendCandidate(candidate) {
+		this.recivers.forEach(id => {
 			this.sendSignal(candidate, id)
 		})
 	}

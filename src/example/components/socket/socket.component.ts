@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, Renderer } from '@angular/core'
 import { SocketIOConnection } from 'modules/socket.io'
 import { WebRTCService } from 'modules/web-rtc'
 import { SocketIOSignalingService } from '../../services'
-import { SignalingService } from 'modules/web-rtc'
+import { SignalingConnection } from 'modules/web-rtc'
 
 /**
  * demo connect using socket.id
@@ -11,7 +11,7 @@ import { SignalingService } from 'modules/web-rtc'
 	selector: 'socket',
 	providers: [
 		{
-			provide: SignalingService,
+			provide: SignalingConnection,
 			useExisting: SocketIOSignalingService,
 		},
 		WebRTCService,

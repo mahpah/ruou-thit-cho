@@ -1,6 +1,5 @@
-import { Injectable, EventEmitter } from '@angular/core'
+import { EventEmitter } from '@angular/core'
 
-@Injectable()
 export abstract class SignalingConnection {
 	candidate: EventEmitter<RTCIceCandidate>
 	offer: EventEmitter<RTCSessionDescription>

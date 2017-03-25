@@ -16,8 +16,10 @@ export class WebRTCService {
 
 	constructor() {}
 
-	init(signaling) {
-		this.signaling = signaling
+	setConfig(params: {
+		signaling: SignalingConnection,
+	}) {
+		this.signaling = params.signaling
 		this.signaling.candidate.subscribe((candidate) => {
 			this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
 		})
@@ -30,6 +32,8 @@ export class WebRTCService {
 		this.signaling.answer.subscribe(description => {
 			this.peerConnection.setRemoteDescription(description)
 		})
+
+		return this
 	}
 
 	createConnection(config?: RTCConfiguration) {

@@ -26,7 +26,9 @@
     "@angular/forms": "^2.1.2",
     "@angular/platform-browser": "^2.1.2",
     "@angular/platform-browser-dynamic": "^2.1.2",
-    "@angular/router": "^4.0.0",
+    "@angular/router": "^3.1.2",
+    "jquery": "^3.2.1",
+    "ms-signalr-client": "^2.2.5",
     "@types/jquery": "^2.0.41",
     "@types/node": "^6.0.46",
     "@types/signalr": "^2.2.33",
@@ -54,18 +56,15 @@
     "tslint": "^4.5.1",
     "webpack": "beta",
     "webpack-dev-server": "beta",
+    "socket.io-client": "^1.7.3",
+    "typescript": "^2.2.1",
+    "@angular/common": "^2.1.2",
+    "rxjs": "^5.0.0-beta.12",
+    "zone.js": "^0.6.26",
     "webpack-merge": "^0.15.0"
   },
   "dependencies": {
-    "@angular/common": "^2.1.2",
     "@angular/core": "^2.1.2",
-    "@angular/router": "^3.1.2",
-    "jquery": "^3.2.1",
-    "ms-signalr-client": "^2.2.5",
-    "rxjs": "^5.0.0-beta.12",
-    "socket.io-client": "^1.7.3",
-    "typescript": "^2.2.1",
-    "webrtc-adapter": "^3.2.0",
-    "zone.js": "^0.6.26"
+    "webrtc-adapter": "^3.2.0"
   }
 }

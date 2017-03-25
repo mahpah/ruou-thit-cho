@@ -2,7 +2,6 @@ import { Component, ViewChild, ElementRef, Renderer } from '@angular/core'
 import { SocketIOConnection } from 'modules/socket.io'
 import { WebRTCService } from 'modules/web-rtc'
 import { SocketIOSignalingService } from '../../services'
-import { SignalingConnection } from 'modules/web-rtc'
 
 /**
  * demo connect using socket.id
@@ -10,10 +9,6 @@ import { SignalingConnection } from 'modules/web-rtc'
 @Component({
 	selector: 'socket',
 	providers: [
-		{
-			provide: SignalingConnection,
-			useExisting: SocketIOSignalingService,
-		},
 		WebRTCService,
 	],
 	styleUrls: ['./socket.component.scss'],
@@ -29,12 +24,15 @@ export class SocketComponent {
 
 	constructor(
 		private socket: SocketIOConnection,
+		private socketSignaling: SocketIOSignalingService,
 		private webRtc: WebRTCService,
 		private renderer: Renderer,
 	) {}
 
 	ngOnInit() {
-		this.webRtc.init()
+		this.webRtc.setConfig({
+			signaling: this.socketSignaling,
+		}).createConnection()
 		this.socket.emit('create or join', 'abc')
 		this.webRtc.request.subscribe(() => {
 			this.onRequest()
@@ -88,7 +86,7 @@ export class SocketComponent {
 			.then(localStream => {
 				this.viewStream(localStream, this.mirror.nativeElement)
 				this.webRtc.addMediaStream(localStream)
-				this.webRtc.createAnswer()
+				this.webRtc.createAnswer({})
 				this.started = true
 			})
 	}

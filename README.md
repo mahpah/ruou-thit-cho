@@ -1,51 +1,51 @@
-# Angular2 modal component
+# WebRTC service for angular 2+
 
-For angular 1 one, please check this repo: https://github.com/mahpah/mDialog
-
-## Manual
-
-Import `MDialogModule` to your main module as root. Register your custom modal within your main module or any module.
+## Example
 
 ```
-@NgModule({
-	imports: [
-		// ...
-		MDialogModule.forRoot(),
-	],
-	declarations: [
-		MyCustomModal,
-	],
-	entryComponents: [
-		MyCustomModal,
-	],
+import { WebRtcConnection } from '@mahpah/ruou-thit-cho'
+import { SignalingConnectionFactory } from './you-write-your-own
+
+@Component({
+	// ...
+	providers: [ WebRtcService ],
 })
-export class MainModule {}
-```
-
-Call `MDialogService.create()` from your component
-
-```
-class AppComponent {
+class VideoCallComponent {
+	private connection
 
 	constructor(
-		private mDialog: MDialogService,
+		private webRTC: WebRtcService,
+		private signalingConnectionFactory: SignalingConnectionFactory,
 	) {}
 
-	openModal() {
-		let modalRef = this.mDialog.create(
-			MainModule,
-			MyCustomModal,
-			// ...any data
+	ngOnInit() {
+		const signalingConnection = this.signalingConnectionFactory.create(
+			// ... options, all yours
 		)
+		this.webRtcService
+			.setConfig({
+				signalingConnection,
+			})
+			.init()
+		this.connection = this.webRtcService
+			.createConnection()
+		connection.stream.subscribe((stream) => {
+			// ...render stream
+		})
+
+		this.connection.offer.subscribe(() => {
+			// ... prepare your stream
+			this.connection.createAnswer()
+		})
 	}
-}
-```
 
-`modalRef` contain 2 replay subject: `componentRef` emit event when component created; and `result` subject emit event when dialog close or dismiss
-
-```
-interface ModalRef {
-	componentRef: ReplaySubject<componentInstance>,
-	result: ReplaySubject<DialogResult>
+	triggerCall() {
+		connection.createOffer(/* constraints */)
+			.subscribe(() => {
+				// ...on offer created successfully, prepare your stream
+			}, () => {
+				// ...on reject
+			})
+	}
 }
 ```

@@ -1,0 +1,7 @@
+Core:
+	☐ Refactor: signaling should be configurable @refactor @task
+	☐ utility to grab ice server url @learn
+
+Doc:
+	☐ Write webrtc-101 @learn
+	☐ Write Readme as RFC

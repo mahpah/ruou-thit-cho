@@ -65,7 +65,7 @@ export class SignalrComponent {
 
 	call([userId]) {
 		let signaling = this.signalrSignalingFactory.create([userId])
-		this.webRtc.init(signaling)
+		this.webRtc.setConfig({signaling})
 		this.webRtc.createConnection(null)
 		this.signalrConnection.call('callUser', [userId])
 	}
@@ -74,7 +74,7 @@ export class SignalrComponent {
 		if (true) {
 			let ids = data.map(d => d.UserId)
 			let signaling = this.signalrSignalingFactory.create(ids)
-			this.webRtc.init(signaling)
+			this.webRtc.setConfig({signaling})
 			this.webRtc.createConnection()
 			this.webRtc.request.subscribe(_ => {
 				this.webRtc.createAnswer({})

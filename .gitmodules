@@ -1,0 +1,3 @@
+[submodule "src/modules/signalr/rtc-signalr"]
+	path = src/modules/signalr/rtc-signalr
+	url = https://github.com/mahpah/rtc-signalr
